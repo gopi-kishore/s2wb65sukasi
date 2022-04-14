@@ -3,12 +3,33 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var Engine = require("./models/engine"); 
+const connectionString = process.env.MONGO_CON 
+mongoose = require('mongoose'); 
+mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true}); 
 
+var engine = require('./models/engine');
+var resourceRouter = require('./routes/resource')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var engineRouter = require('./routes/engine');
 var addmodsRouter = require('./routes/addmods');
 var selectorRouter = require('./routes/selector');
+
+let reseed = true; 
+if (reseed) { recreateDB();} 
+
+async function recreateDB(){ 
+  // Delete everything 
+  await engine.deleteMany(); 
+ 
+  let instance1 = new engine({turboengine_name: 'Hyundai', size: '40lbs', turboengine_cost: 100 }); 
+  instance1.save( function(err,doc) { 
+      if(err) return console.error(err); 
+      console.log("First object saved") 
+  }); 
+} 
+
 var app = express();
 
 // view engine setup
@@ -26,6 +47,7 @@ app.use('/users', usersRouter);
 app.use('/engine', engineRouter);
 app.use('/addmods', addmodsRouter);
 app.use('/selector', selectorRouter);
+app.use('/', resourceRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
