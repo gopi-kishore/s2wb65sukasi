@@ -28,6 +28,16 @@ async function recreateDB(){
       if(err) return console.error(err); 
       console.log("First object saved") 
   }); 
+  let instance2 = new engine({turboengine_name: 'Sonata', size: '60lbs', turboengine_cost: 80 }); 
+  instance2.save( function(err,doc) { 
+      if(err) return console.error(err); 
+      console.log("Second object saved") 
+  }); 
+  let instance3 = new engine({turboengine_name: 'Elantra', size: '20lbs', turboengine_cost: 60 }); 
+  instance3.save( function(err,doc) { 
+      if(err) return console.error(err); 
+      console.log("Third object saved") 
+  }); 
 } 
 
 var app = express();
